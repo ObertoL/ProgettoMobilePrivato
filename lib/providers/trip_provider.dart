@@ -17,19 +17,20 @@ class TripProvider extends ChangeNotifier {
   String get searchQuery => _searchQuery;
   TripStatus? get filterStatus => _filterStatus;
 
+  // Metodo per filtrare i trips
   List<Trip> _filteredTrips() {
     var result = List<Trip>.from(_trips);
     if (_filterStatus != null) {
       result = result
-          .where((t) => t.computedStatus == _filterStatus)
+          .where((trip) => trip.computedStatus == _filterStatus)
           .toList();
     }
     if (_searchQuery.isNotEmpty) {
-      final q = _searchQuery.toLowerCase();
+      final query = _searchQuery.toLowerCase();
       result = result
-          .where((t) =>
-              t.title.toLowerCase().contains(q) ||
-              t.destination.toLowerCase().contains(q))
+          .where((trip) =>
+              trip.title.toLowerCase().contains(query) ||
+              trip.destination.toLowerCase().contains(query))
           .toList();
     }
     return result;
@@ -51,6 +52,8 @@ class TripProvider extends ChangeNotifier {
     }
   }
 
+  // Aggiungere un trip 
+  //  Requisiti: titolo, destinazione, data di inizio, data di fine
   Future<Trip> addTrip({
     required String title,
     required String destination,
@@ -78,6 +81,7 @@ class TripProvider extends ChangeNotifier {
     return trip;
   }
 
+  // Update del trip
   Future<void> updateTrip(Trip trip) async {
     await _repo.update(trip);
     final idx = _trips.indexWhere((t) => t.id == trip.id);
@@ -87,12 +91,14 @@ class TripProvider extends ChangeNotifier {
     }
   }
 
+  // Cancellazione del trip
   Future<void> deleteTrip(String id) async {
     await _repo.delete(id);
     _trips.removeWhere((t) => t.id == id);
     notifyListeners();
   }
 
+  // Duplicare il trip
   Future<Trip> duplicateTrip(Trip source) async {
     final newId = _uuid.v4();
     final copy = Trip(
@@ -113,22 +119,26 @@ class TripProvider extends ChangeNotifier {
     return copy;
   }
 
+  // Setter della stringa di ricerca
   void setSearch(String query) {
     _searchQuery = query;
     notifyListeners();
   }
 
+  // Setter dei filtri di stato del trip
   void setFilter(TripStatus? status) {
     _filterStatus = status;
     notifyListeners();
   }
 
+  // Metodo che azzera i filtri
   void clearFilters() {
     _searchQuery = '';
     _filterStatus = null;
     notifyListeners();
   }
 
+  // Metodo che restituisce una mappa con numero di viaggi per stato
   Map<TripStatus, int> get statusCounts {
     final counts = <TripStatus, int>{};
     for (final t in _trips) {

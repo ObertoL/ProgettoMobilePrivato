@@ -39,24 +39,28 @@ class _TripsListScreenState extends State<TripsListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
+      // Barra che contiene "I miei viaggi"+ Il tasto per filtrare + barra di ricerca
       appBar: AppBar(
         title: const Text('I Miei Viaggi'),
         actions: [
+          // Tasto filtri
           IconButton(
             icon: const Icon(Icons.filter_list),
-            onPressed: _showFilterSheet,
+            onPressed: _showFilterSheet,// Azione del tasto filtro
             tooltip: 'Filtra',
           ),
         ],
+        // Tutto ciò che è sotto I miei viaggi + tasto per filtrare
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(60),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            // Barra di ricerca con controller
             child: TextField(
               controller: _searchController,
-              onChanged: (v) {
+              onChanged: (query) {
                 setState(() {});
-                context.read<TripProvider>().setSearch(v);
+                context.read<TripProvider>().setSearch(query);
               },
               style: const TextStyle(color: Colors.white),
               decoration: InputDecoration(
