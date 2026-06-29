@@ -7,3 +7,5 @@
     - Modifica in trips_lsit_screen e trip_provider
 4. Cambiare il colore delle cards in base allo stato (che viene calcolato ogni volta che viene caricata la schermata dei viaggi)
 5. Constraint sulla data delle tappe rispetto la data dei viaggi a cui le tappe fanno riferimento
+6. Si può aggiungere un importo negativo
+7. Visualizzare gli archiviati a parte
