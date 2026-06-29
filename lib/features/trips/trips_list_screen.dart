@@ -46,7 +46,7 @@ class _TripsListScreenState extends State<TripsListScreen> {
           // Tasto filtri
           IconButton(
             icon: const Icon(Icons.filter_list),
-            onPressed: _showFilterSheet,// Azione del tasto filtro
+            onPressed: _showFilterSheet, // Azione del tasto filtro
             tooltip: 'Filtra',
           ),
         ],
@@ -98,7 +98,7 @@ class _TripsListScreenState extends State<TripsListScreen> {
             return const Center(child: CircularProgressIndicator());
           }
 
-          final trips = provider.trips;
+          final trips = provider.tripsSortedByStatus;
           if (trips.isEmpty) {
             return EmptyState(
               icon: Icons.luggage_outlined,
@@ -212,8 +212,10 @@ class _TripCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final status = trip.computedStatus;
+  final status = trip.computedStatus;
+  final bg = _backgroundForStatus(status);
     return Card(
+      color: bg,
       child: InkWell(
         borderRadius: BorderRadius.circular(12),
         onTap: () => Navigator.of(context).push(
@@ -353,6 +355,19 @@ class _TripCard extends StatelessWidget {
         child: Icon(icon, size: 20, color: color ?? AppColors.textSecondary),
       ),
     );
+  }
+
+  Color _backgroundForStatus(TripStatus status) {
+    switch (status) {
+      case TripStatus.future:
+        return AppColors.statusFuture.withOpacity(0.05);
+      case TripStatus.ongoing:
+        return AppColors.statusOngoing.withOpacity(0.05);
+      case TripStatus.completed:
+        return AppColors.statusCompleted.withOpacity(0.05);
+      case TripStatus.archived:
+        return AppColors.statusArchived.withOpacity(0.05);
+    }
   }
 
   Future<void> _duplicate(BuildContext context) async {

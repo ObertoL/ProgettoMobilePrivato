@@ -28,12 +28,41 @@ class TripProvider extends ChangeNotifier {
     if (_searchQuery.isNotEmpty) {
       final query = _searchQuery.toLowerCase();
       result = result
-          .where((trip) =>
-              trip.title.toLowerCase().contains(query) ||
-              trip.destination.toLowerCase().contains(query))
+          .where(
+            (trip) =>
+                trip.title.toLowerCase().contains(query) ||
+                trip.destination.toLowerCase().contains(query),
+          )
           .toList();
     }
     return result;
+  }
+
+  // Lista ordinata
+  List<Trip> get tripsSortedByStatus {
+    final list = _filteredTrips(); //Trips filtrati per search e status
+    list.sort((a, b) {
+      int priority(TripStatus s) {
+        switch (s) {
+          case TripStatus.ongoing:
+            return 0;
+          case TripStatus.future:
+            return 1;
+          case TripStatus.completed:
+            return 3;
+          case TripStatus.archived:
+            return 4;
+        }
+      }
+      int priorityA = priority(a.computedStatus);
+      int priorityB = priority(b.computedStatus);
+
+      if(priorityA.compareTo(priorityB)!=0){
+        return priorityA.compareTo(priorityB);
+      }
+      return a.title.compareTo(b.title);
+    });
+    return list;
   }
 
   Future<void> loadTrips() async {
@@ -52,7 +81,7 @@ class TripProvider extends ChangeNotifier {
     }
   }
 
-  // Aggiungere un trip 
+  // Aggiungere un trip
   //  Requisiti: titolo, destinazione, data di inizio, data di fine
   Future<Trip> addTrip({
     required String title,
