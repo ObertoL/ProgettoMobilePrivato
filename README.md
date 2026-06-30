@@ -17,3 +17,5 @@
     - Ho modificato features/checklists/checklists_screen.dart
 11. Se la checklist "🧳 Valigia " esiste, deve scomparire il pulsante "Genera valigia"
 12. Gli elementi della valigia generata deve essere forse più corta
+13. Le spese delle attività non compaiono nelle spese totali delle statistics
+14. Nei viaggi si possono mettere date prima di oggi sia alla modifica che alla creazione
