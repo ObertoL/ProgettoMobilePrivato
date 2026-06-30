@@ -162,7 +162,7 @@ class _ChecklistCard extends StatefulWidget {
 }
 
 class _ChecklistCardState extends State<_ChecklistCard> {
-  bool _expanded = true;
+  bool _expanded = false;
   final _addCtrl = TextEditingController();
 
   @override

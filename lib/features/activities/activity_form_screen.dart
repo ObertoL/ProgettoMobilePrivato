@@ -133,8 +133,12 @@ class _ActivityFormScreenState extends State<ActivityFormScreen> {
               keyboardType: TextInputType.number,
               validator: (v) {
                 if (v != null && v.isNotEmpty) {
-                  if (double.tryParse(v.replaceAll(',', '.')) == null) {
+                  final parse = double.tryParse(v.replaceAll(',', '.'));
+                  if (parse == null) {
                     return 'Inserisci un numero valido';
+                  }
+                  if(parse <0){
+                    return 'Inserisci un numero positivo';
                   }
                 }
                 return null;

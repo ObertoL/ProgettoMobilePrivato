@@ -76,8 +76,12 @@ class _ExpenseFormScreenState extends State<ExpenseFormScreen> {
               keyboardType: TextInputType.number,
               validator: (v) {
                 if (v == null || v.isEmpty) return 'Campo obbligatorio';
-                if (double.tryParse(v.replaceAll(',', '.')) == null) {
+                final parse = double.tryParse(v.replaceAll(',', '.'));
+                if (parse == null) {
                   return 'Inserisci un numero valido';
+                }
+                if(parse < 0){
+                  return 'Inserisci un numero positivo';
                 }
                 return null;
               },
