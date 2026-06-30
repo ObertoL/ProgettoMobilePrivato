@@ -15,3 +15,5 @@
     - non usa AI ma un array popolato dai vari oggetti
 10. ✔️Le checklist devono apparire chiuse e si aprono al touch della lista
     - Ho modificato features/checklists/checklists_screen.dart
+11. Se la checklist "🧳 Valigia " esiste, deve scomparire il pulsante "Genera valigia"
+12. Gli elementi della valigia generata deve essere forse più corta
