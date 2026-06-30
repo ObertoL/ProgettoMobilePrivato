@@ -34,14 +34,11 @@ class _TripFormScreenState extends State<TripFormScreen> {
     _titleCtrl = TextEditingController(text: t?.title);
     _destCtrl = TextEditingController(text: t?.destination);
     _descCtrl = TextEditingController(text: t?.description);
-    _budgetCtrl =
-        TextEditingController(text: t?.budget?.toString());
-    _participantsCtrl =
-        TextEditingController(text: t?.participants);
+    _budgetCtrl = TextEditingController(text: t?.budget?.toString());
+    _participantsCtrl = TextEditingController(text: t?.participants);
     _notesCtrl = TextEditingController(text: t?.notes);
-    _startDate = t?.startDate ?? DateTime.now();
-    _endDate =
-        t?.endDate ?? DateTime.now().add(const Duration(days: 7));
+    _startDate = t?.startDate ?? DateTime.now().add(const Duration(days: 1));
+    _endDate = t?.endDate ?? DateTime.now().add(const Duration(days: 7));
     _status = t?.status ?? TripStatus.future;
   }
 
@@ -67,14 +64,20 @@ class _TripFormScreenState extends State<TripFormScreen> {
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
-            _field(_titleCtrl, 'Titolo *',
-                validator: (v) =>
-                    v == null || v.isEmpty ? 'Campo obbligatorio' : null),
+            _field(
+              _titleCtrl,
+              'Titolo *',
+              validator: (v) =>
+                  v == null || v.isEmpty ? 'Campo obbligatorio' : null,
+            ),
             const SizedBox(height: 12),
-            _field(_destCtrl, 'Destinazione *',
-                prefixIcon: Icons.place_outlined,
-                validator: (v) =>
-                    v == null || v.isEmpty ? 'Campo obbligatorio' : null),
+            _field(
+              _destCtrl,
+              'Destinazione *',
+              prefixIcon: Icons.place_outlined,
+              validator: (v) =>
+                  v == null || v.isEmpty ? 'Campo obbligatorio' : null,
+            ),
             const SizedBox(height: 12),
             _DateRangePicker(
               startDate: _startDate,
@@ -83,42 +86,58 @@ class _TripFormScreenState extends State<TripFormScreen> {
               onEndChanged: (d) => setState(() => _endDate = d),
             ),
             const SizedBox(height: 12),
-            _field(_budgetCtrl, 'Budget previsto (€)',
-                prefixIcon: Icons.account_balance_wallet_outlined,
-                keyboardType: TextInputType.number,
-                validator: (v) {
-                  if (v != null && v.isNotEmpty) {
-                    if (double.tryParse(v.replaceAll(',', '.')) == null) {
-                      return 'Inserisci un numero valido';
-                    }
+            _field(
+              _budgetCtrl,
+              'Budget previsto (€)',
+              prefixIcon: Icons.account_balance_wallet_outlined,
+              keyboardType: TextInputType.number,
+              validator: (v) {
+                if (v != null && v.isNotEmpty) {
+                  final parsed = double.tryParse(v.replaceAll(',', '.'));
+                  if(parsed == null){
+                    return 'Inserisci un numero valido';
                   }
-                  return null;
-                }),
+                  if(parsed<0){
+                    return 'Il budget non può essere negativo';
+                  }
+                }
+                return null;
+              },
+            ),
             const SizedBox(height: 12),
-            _field(_participantsCtrl, 'Partecipanti',
-                prefixIcon: Icons.group_outlined),
+            _field(
+              _participantsCtrl,
+              'Partecipanti',
+              prefixIcon: Icons.group_outlined,
+            ),
             const SizedBox(height: 12),
+            // Status viene mostrato solo quanod si modifica
             if (_isEditing) ...[
               DropdownButtonFormField<TripStatus>(
                 initialValue: _status,
                 decoration: const InputDecoration(labelText: 'Stato'),
                 items: TripStatus.values
-                    .map((s) => DropdownMenuItem(
-                          value: s,
-                          child: Text(s.label),
-                        ))
+                    .map(
+                      (s) => DropdownMenuItem(value: s, child: Text(s.label)),
+                    )
                     .toList(),
-                onChanged: (v) =>
-                    setState(() => _status = v ?? _status),
+                onChanged: (v) => setState(() => _status = v ?? _status),
               ),
               const SizedBox(height: 12),
             ],
-            _field(_descCtrl, 'Descrizione',
-                prefixIcon: Icons.description_outlined,
-                maxLines: 3),
+            _field(
+              _descCtrl,
+              'Descrizione',
+              prefixIcon: Icons.description_outlined,
+              maxLines: 3,
+            ),
             const SizedBox(height: 12),
-            _field(_notesCtrl, 'Note',
-                prefixIcon: Icons.notes_outlined, maxLines: 3),
+            _field(
+              _notesCtrl,
+              'Note',
+              prefixIcon: Icons.notes_outlined,
+              maxLines: 3,
+            ),
             const SizedBox(height: 32),
             ElevatedButton(
               onPressed: _isSaving ? null : _save,
@@ -126,8 +145,8 @@ class _TripFormScreenState extends State<TripFormScreen> {
                   ? const SizedBox(
                       height: 20,
                       width: 20,
-                      child:
-                          CircularProgressIndicator(strokeWidth: 2))
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
                   : Text(_isEditing ? 'Salva modifiche' : 'Crea viaggio'),
             ),
           ],
@@ -151,8 +170,7 @@ class _TripFormScreenState extends State<TripFormScreen> {
       validator: validator,
       decoration: InputDecoration(
         labelText: label,
-        prefixIcon:
-            prefixIcon != null ? Icon(prefixIcon) : null,
+        prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
       ),
     );
   }
@@ -162,8 +180,10 @@ class _TripFormScreenState extends State<TripFormScreen> {
     if (_endDate.isBefore(_startDate)) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-            content: Text(
-                'La data di fine non può essere prima della data di inizio')),
+          content: Text(
+            'La data di fine non può essere prima della data di inizio',
+          ),
+        ),
       );
       return;
     }
@@ -173,8 +193,7 @@ class _TripFormScreenState extends State<TripFormScreen> {
       final provider = context.read<TripProvider>();
       final budget = _budgetCtrl.text.isEmpty
           ? null
-          : double.tryParse(
-              _budgetCtrl.text.replaceAll(',', '.'));
+          : double.tryParse(_budgetCtrl.text.replaceAll(',', '.'));
 
       if (_isEditing) {
         final updated = widget.existingTrip!.copyWith(
@@ -182,16 +201,13 @@ class _TripFormScreenState extends State<TripFormScreen> {
           destination: _destCtrl.text.trim(),
           startDate: _startDate,
           endDate: _endDate,
-          description: _descCtrl.text.isEmpty
-              ? null
-              : _descCtrl.text.trim(),
+          description: _descCtrl.text.isEmpty ? null : _descCtrl.text.trim(),
           status: _status,
           budget: budget,
           participants: _participantsCtrl.text.isEmpty
               ? null
               : _participantsCtrl.text.trim(),
-          notes:
-              _notesCtrl.text.isEmpty ? null : _notesCtrl.text.trim(),
+          notes: _notesCtrl.text.isEmpty ? null : _notesCtrl.text.trim(),
         );
         await provider.updateTrip(updated);
       } else {
@@ -200,16 +216,12 @@ class _TripFormScreenState extends State<TripFormScreen> {
           destination: _destCtrl.text.trim(),
           startDate: _startDate,
           endDate: _endDate,
-          description: _descCtrl.text.isEmpty
-              ? null
-              : _descCtrl.text.trim(),
+          description: _descCtrl.text.isEmpty ? null : _descCtrl.text.trim(),
           budget: budget,
           participants: _participantsCtrl.text.isEmpty
               ? null
               : _participantsCtrl.text.trim(),
-          notes: _notesCtrl.text.isEmpty
-              ? null
-              : _notesCtrl.text.trim(),
+          notes: _notesCtrl.text.isEmpty ? null : _notesCtrl.text.trim(),
         );
       }
       if (mounted) Navigator.of(context).pop();
@@ -264,9 +276,7 @@ class _DateRangePicker extends StatelessWidget {
             onTap: () async {
               final d = await showDatePicker(
                 context: context,
-                initialDate: endDate.isBefore(startDate)
-                    ? startDate
-                    : endDate,
+                initialDate: endDate.isBefore(startDate) ? startDate : endDate,
                 firstDate: startDate,
                 lastDate: DateTime(2100),
               );
@@ -278,10 +288,12 @@ class _DateRangePicker extends StatelessWidget {
     );
   }
 
-  Widget _dateTile(BuildContext context,
-      {required String label,
-      required DateTime date,
-      required VoidCallback onTap}) {
+  Widget _dateTile(
+    BuildContext context, {
+    required String label,
+    required DateTime date,
+    required VoidCallback onTap,
+  }) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(10),
