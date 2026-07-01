@@ -21,4 +21,5 @@
 12. Gli elementi della valigia generata deve essere forse più corta
 13. Le spese delle attività non compaiono nelle spese totali delle statistics
 14. Nei viaggi si possono mettere date prima di oggi sia alla modifica che alla creazione
+    - Devo permetterlo perché qualcuno potrebbe voler aggiungere un viaggio vecchio per ricordo
 15. Nelle tappe va fatto un controllo sulla data scelta in modo che sia contenuta all'interno del viaggio
