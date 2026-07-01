@@ -143,7 +143,8 @@ class _FilterBar extends StatelessWidget {
     return FilterChip(
       avatar: Icon(icon,
           size: 14,
-          color: isSelected ? null : AppColors.textSecondary),
+          color: isSelected ? Color.fromARGB(0, 0, 0, 0) : AppColors.textSecondary),
+          // AppColors.textSecondary
       label: Text(label),
       selected: isSelected,
       onSelected: (_) => onChanged(value),

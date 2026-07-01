@@ -56,11 +56,13 @@ class TripProvider extends ChangeNotifier {
       }
       int priorityA = priority(a.computedStatus);
       int priorityB = priority(b.computedStatus);
+      
+      int cmp = priorityA.compareTo(priorityB);
 
-      if(priorityA.compareTo(priorityB)!=0){
+      if(cmp != 0){
         return priorityA.compareTo(priorityB);
       }
-      return a.title.compareTo(b.title);
+      return a.title.toLowerCase().compareTo(b.title.toLowerCase());
     });
     return list;
   }

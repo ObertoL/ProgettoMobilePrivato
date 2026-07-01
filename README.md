@@ -8,7 +8,8 @@
 4. ✔️Cambiare il colore delle cards in base allo stato (che viene calcolato ogni volta che viene caricata la schermata dei viaggi)
     controllare anche il filtro per data in modo che facci aselezionare solo le date del viaggio
     - Modifica trips/trip_form_screen.dart
-7. Visualizzare gli archiviati a parte
+7. ✔️Visualizzare gli archiviati a parte
+    - Modifica di trips_list_screen.dart e trip_provider.dart
 8. ✔️Si possono aggiungere spese in negativo alle singole trips, alle attività
     - Ho modificato feature/expenses/expense_form_screen.dart, feature/activities/activity_form_screen.dart
 9. ✔️Controllare il segmento valigia perché utilizza AI per generare una valigia

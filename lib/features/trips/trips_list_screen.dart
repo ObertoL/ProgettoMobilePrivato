@@ -20,6 +20,7 @@ class TripsListScreen extends StatefulWidget {
 
 class _TripsListScreenState extends State<TripsListScreen> {
   final _searchController = TextEditingController();
+  bool _showArchivedOnly = false;
 
   @override
   void initState() {
@@ -44,6 +45,14 @@ class _TripsListScreenState extends State<TripsListScreen> {
         title: const Text('I Miei Viaggi'),
         actions: [
           // Tasto filtri
+          IconButton(
+            icon: const Icon(Icons.archive),
+            onPressed: () => setState(() => _showArchivedOnly = !_showArchivedOnly),
+            tooltip: _showArchivedOnly ? 'Mostra i viaggi non archiviati' : 'Mostra i viaggi archiviati',
+            style: IconButton.styleFrom(
+              backgroundColor: _showArchivedOnly ? AppColors.primaryLight : Colors.transparent,
+            )
+          ),
           IconButton(
             icon: const Icon(Icons.filter_list),
             onPressed: _showFilterSheet, // Azione del tasto filtro
@@ -98,7 +107,11 @@ class _TripsListScreenState extends State<TripsListScreen> {
             return const Center(child: CircularProgressIndicator());
           }
 
-          final trips = provider.tripsSortedByStatus;
+          var trips = provider.tripsSortedByStatus;
+
+          if(_showArchivedOnly){
+            trips = trips.where((t)=> t.status == TripStatus.archived).toList();
+          }
           if (trips.isEmpty) {
             return EmptyState(
               icon: Icons.luggage_outlined,
