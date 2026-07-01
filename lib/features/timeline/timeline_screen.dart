@@ -100,7 +100,13 @@ class _TimelineEntryWidget extends StatefulWidget {
 
 class _TimelineEntryWidgetState
     extends State<_TimelineEntryWidget> {
-  bool _expanded = true;
+  late bool _expanded;
+
+  @override
+  void initState(){
+    super.initState();
+    _expanded = widget.entry.activities.isNotEmpty;
+  }
 
   @override
   Widget build(BuildContext context) {
