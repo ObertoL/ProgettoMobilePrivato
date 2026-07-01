@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:travel_organizer/core/theme/app_colors.dart';
 import '../../data/models/trip.dart';
 import '../../providers/trip_provider.dart';
 import '../../core/utils/date_formatter.dart';
