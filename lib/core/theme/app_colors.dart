@@ -22,7 +22,7 @@ class AppColors {
 
   static const statusFuture = Color(0xFF1E88E5);
   static const statusOngoing = Color(0xFF43A047);
-  static const statusCompleted = Color(0xFF757575);
+  static const statusCompleted = Color(0xFF5A5A5A);
   static const statusArchived = Color(0xFFBDBDBD);
 
   static Color forTripStatus(String status) {

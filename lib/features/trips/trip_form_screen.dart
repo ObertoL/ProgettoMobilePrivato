@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:travel_organizer/core/theme/app_colors.dart';
 import '../../data/models/trip.dart';
 import '../../providers/trip_provider.dart';
 import '../../core/utils/date_formatter.dart';
+import '../../shared/widgets/confirm_dialog.dart';
 
 class TripFormScreen extends StatefulWidget {
   final Trip? existingTrip;
@@ -94,10 +96,10 @@ class _TripFormScreenState extends State<TripFormScreen> {
               validator: (v) {
                 if (v != null && v.isNotEmpty) {
                   final parsed = double.tryParse(v.replaceAll(',', '.'));
-                  if(parsed == null){
+                  if (parsed == null) {
                     return 'Inserisci un numero valido';
                   }
-                  if(parsed<0){
+                  if (parsed < 0) {
                     return 'Il budget non può essere negativo';
                   }
                 }
@@ -186,6 +188,37 @@ class _TripFormScreenState extends State<TripFormScreen> {
         ),
       );
       return;
+    }
+
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final startDay = DateTime(
+      _startDate.year,
+      _startDate.month,
+      _startDate.day,
+    );
+    final endDay = DateTime(_endDate.year, _endDate.month, _endDate.day);
+
+    if (startDay.isBefore(today)) {
+      final confirmed = await ConfirmDialog.show(
+        context,
+        title: 'Conferma la data inserita',
+        message:
+            'La data di inizio del viaggio è precedente ad oggi. Vuoi continuare comunque?',
+            confirmLabel: 'Continua',
+      );
+      if (confirmed != true) return;
+    }
+
+    if (endDay.isBefore(today)) {
+      final confirmed = await ConfirmDialog.show(
+        context,
+        title: 'Conferma la data inserita',
+        message:
+            'La data di fine del viaggio è precedente ad oggi. Vuoi continuare comunque?',
+            confirmLabel: 'Continua',
+      );
+      if (confirmed != true) return;
     }
 
     setState(() => _isSaving = true);

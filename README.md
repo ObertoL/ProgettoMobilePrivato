@@ -20,6 +20,6 @@
     - Ho modificato packing/packing_list_screen.dart
 12. Gli elementi della valigia generata deve essere forse più corta
 13. Le spese delle attività non compaiono nelle spese totali delle statistics
-14. Nei viaggi si possono mettere date prima di oggi sia alla modifica che alla creazione
-    - Devo permetterlo perché qualcuno potrebbe voler aggiungere un viaggio vecchio per ricordo
+14. ✔️Nei viaggi si possono mettere date prima di oggi sia alla modifica che alla creazione
+    - esce un messaggio di conferma, ho modificato trips_lsit+screen, trip_form_scree, e app_colors
 15. Nelle tappe va fatto un controllo sulla data scelta in modo che sia contenuta all'interno del viaggio
