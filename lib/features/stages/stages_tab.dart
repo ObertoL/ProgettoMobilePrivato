@@ -34,6 +34,7 @@ class _StagesTabState extends State<StagesTab> {
     return Consumer<StageProvider>(
       builder: (context, provider, _) {
         final allStages = provider.getByTrip(widget.tripId);
+        allStages.sort((a,b)=>a.order.compareTo(b.order));
         var stages = allStages;
 
         if (_searchQuery.isNotEmpty) {
