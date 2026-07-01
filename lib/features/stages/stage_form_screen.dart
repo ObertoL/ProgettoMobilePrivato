@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import '../../core/utils/date_formatter.dart';
 import '../../data/models/stage.dart';
 import '../../providers/stage_provider.dart';
+import '../../data/models/trip.dart';
+import '../../providers/trip_provider.dart';
 
 class StageFormScreen extends StatefulWidget {
   final String tripId;
@@ -21,6 +23,8 @@ class _StageFormScreenState extends State<StageFormScreen> {
   late final TextEditingController _descCtrl;
   late final TextEditingController _notesCtrl;
   late DateTime _date;
+  String? _dateError;
+  DateTime _dateOnly(DateTime d) => DateTime(d.year, d.month, d.day);
   bool _isSaving = false;
 
   bool get _isEditing => widget.existingStage != null;
@@ -66,10 +70,12 @@ class _StageFormScreenState extends State<StageFormScreen> {
             InkWell(
               onTap: _pickDate,
               child: InputDecorator(
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Data',
                   prefixIcon:
                       Icon(Icons.calendar_today_outlined),
+                  errorText: _dateError,
+                  errorMaxLines: 2,
                 ),
                 child: Text(DateFormatter.date(_date)),
               ),
@@ -112,19 +118,70 @@ class _StageFormScreenState extends State<StageFormScreen> {
     );
   }
 
+  Trip? _linkedTrip(){
+    return context.read<TripProvider>().getById(widget.tripId);
+  }
+
   Future<void> _pickDate() async {
+    final trip = _linkedTrip();
+    
+    late final DateTime firstDate;
+    late final DateTime lastDate;
+
+    if(trip != null){
+      firstDate = _dateOnly(trip.startDate);
+      lastDate = _dateOnly(trip.endDate);
+    } else {
+      firstDate = DateTime(2000);
+      lastDate = DateTime(2100);
+    }
+    final currentDate = _dateOnly(_date);
+    late final DateTime initialDate;
+
+    if(!currentDate.isBefore(firstDate)){
+      if(currentDate.isAfter(lastDate)){
+        initialDate = lastDate;
+      }
+      else{
+        initialDate = currentDate;
+      }
+    }
+    else{
+      initialDate = firstDate;
+    }
+
     final d = await showDatePicker(
       context: context,
-      initialDate: _date,
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2100),
+      initialDate: initialDate,
+      firstDate: firstDate,
+      lastDate: lastDate,
     );
+
     if (d != null) setState(() => _date = d);
   }
 
   Future<void> _save() async {
     if (!_formKey.currentState!.validate()) return;
+
+    final trip = _linkedTrip();
+
+    setState(() => _dateError = null);
+
+    if(trip != null){
+      final tripStart = _dateOnly(trip.startDate);
+      final tripEnd = _dateOnly(trip.endDate);
+      final stageDate = _dateOnly(_date);
+
+      if(stageDate.isBefore(tripStart) || stageDate.isAfter(tripEnd)){
+      setState(() {
+        _dateError = 'La data della tappa deve essere compresa tra l\'inizio del viaggio e la fine del viaggio';
+      });
+      return;
+      }
+    }
+
     setState(() => _isSaving = true);
+
     try {
       final provider = context.read<StageProvider>();
       if (_isEditing) {

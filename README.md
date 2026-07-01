@@ -22,4 +22,6 @@
 13. Le spese delle attività non compaiono nelle spese totali delle statistics
 14. ✔️Nei viaggi si possono mettere date prima di oggi sia alla modifica che alla creazione
     - esce un messaggio di conferma, ho modificato trips_lsit+screen, trip_form_scree, e app_colors
-15. Nelle tappe va fatto un controllo sulla data scelta in modo che sia contenuta all'interno del viaggio
+15. ✔️Nelle tappe va fatto un controllo sulla data scelta in modo che sia contenuta all'interno del viaggio
+    - Ho modificato stage_form_screen.dart
+16. Le timeline risultano aperte e dovrebbero FORSE essere chiuse di default come le checklists
