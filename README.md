@@ -25,3 +25,4 @@
 15. ✔️Nelle tappe va fatto un controllo sulla data scelta in modo che sia contenuta all'interno del viaggio
     - Ho modificato stage_form_screen.dart
 16. Le timeline risultano aperte e dovrebbero FORSE essere chiuse di default come le checklists
+17. Date picker del filtro deve essere compreso tra data di inizio e data di fine del trip
