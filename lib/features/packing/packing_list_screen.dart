@@ -65,8 +65,9 @@ class _PackingListScreenState extends State<PackingListScreen> {
     await provider.loadForTrip(widget.tripId);
     if (!mounted) return;
     final checklists = provider.getByTrip(widget.tripId);
-    final existing =
-        checklists.where((c) => c.title == _packingTitle).firstOrNull;
+    final existing = checklists
+        .where((c) => c.title == _packingTitle)
+        .firstOrNull;
     if (existing != null) {
       setState(() => _checklistId = existing.id);
     } else {
@@ -103,9 +104,11 @@ class _PackingListScreenState extends State<PackingListScreen> {
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(added > 0
-              ? '$added elementi aggiunti alla lista'
-              : 'Lista già completa'),
+          content: Text(
+            added > 0
+                ? '$added elementi aggiunti alla lista'
+                : 'Lista già completa',
+          ),
         ),
       );
     }
@@ -151,7 +154,10 @@ class _PackingListScreenState extends State<PackingListScreen> {
                           return CheckboxListTile(
                             value: item.isCompleted,
                             onChanged: (_) => provider.toggleItem(
-                                widget.tripId, cl.id, item.id),
+                              widget.tripId,
+                              cl.id,
+                              item.id,
+                            ),
                             title: Text(
                               item.title,
                               style: TextStyle(
@@ -165,10 +171,16 @@ class _PackingListScreenState extends State<PackingListScreen> {
                             ),
                             activeColor: AppColors.success,
                             secondary: IconButton(
-                              icon: const Icon(Icons.delete_outline,
-                                  size: 18, color: AppColors.error),
+                              icon: const Icon(
+                                Icons.delete_outline,
+                                size: 18,
+                                color: AppColors.error,
+                              ),
                               onPressed: () => provider.deleteItem(
-                                  widget.tripId, cl.id, item.id),
+                                widget.tripId,
+                                cl.id,
+                                item.id,
+                              ),
                             ),
                           );
                         },
@@ -186,7 +198,9 @@ class _PackingListScreenState extends State<PackingListScreen> {
                           hintText: 'Aggiungi oggetto…',
                           isDense: true,
                           contentPadding: EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 10),
+                            horizontal: 12,
+                            vertical: 10,
+                          ),
                           border: OutlineInputBorder(),
                         ),
                         onSubmitted: _addItem,
@@ -194,8 +208,11 @@ class _PackingListScreenState extends State<PackingListScreen> {
                     ),
                     const SizedBox(width: 8),
                     IconButton(
-                      icon: const Icon(Icons.add_circle,
-                          color: AppColors.primary, size: 32),
+                      icon: const Icon(
+                        Icons.add_circle,
+                        color: AppColors.primary,
+                        size: 32,
+                      ),
                       onPressed: () => _addItem(_addCtrl.text),
                     ),
                   ],
@@ -238,9 +255,10 @@ class _ProgressHeader extends StatelessWidget {
                       ? 'Nessun oggetto nella lista'
                       : '$completed / $total oggetti pronti',
                   style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15),
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                  ),
                 ),
                 if (total > 0) ...[
                   const SizedBox(height: 6),
@@ -258,18 +276,27 @@ class _ProgressHeader extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 12),
-          TextButton.icon(
-            onPressed: onGenerate,
-            icon: const Icon(Icons.auto_awesome,
-                color: Colors.white, size: 18),
-            label: const Text('Genera lista',
-                style: TextStyle(color: Colors.white, fontSize: 13)),
-            style: TextButton.styleFrom(
-              backgroundColor: Colors.white.withAlpha(30),
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+          if (total == 0) ...[
+            TextButton.icon(
+              onPressed: onGenerate,
+              icon: const Icon(
+                Icons.auto_awesome,
+                color: Colors.white,
+                size: 18,
+              ),
+              label: const Text(
+                'Genera lista',
+                style: TextStyle(color: Colors.white, fontSize: 13),
+              ),
+              style: TextButton.styleFrom(
+                backgroundColor: Colors.white.withAlpha(30),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 6,
+                ),
+              ),
             ),
-          ),
+          ],
         ],
       ),
     );
@@ -286,13 +313,15 @@ class _EmptyPackingState extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.luggage_outlined,
-              size: 72, color: AppColors.textHint),
+          const Icon(
+            Icons.luggage_outlined,
+            size: 72,
+            color: AppColors.textHint,
+          ),
           const SizedBox(height: 16),
           const Text(
             'Lista valigia vuota',
-            style: TextStyle(
-                fontSize: 16, color: AppColors.textSecondary),
+            style: TextStyle(fontSize: 16, color: AppColors.textSecondary),
           ),
           const SizedBox(height: 8),
           const Text(
