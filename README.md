@@ -38,3 +38,4 @@
     - Ho cambiato stage_tab.dart
 22. ✔️Le attività adesso possono cambiare tappa associata e data/ora
     - activity_form_screen.dart, activity.dart
+23. Le attività checckate e con un prezzo devono contribuire alle spese effettive, eventualmente devo aggiungere un'altra riga alla sezione delle statistiche totali
