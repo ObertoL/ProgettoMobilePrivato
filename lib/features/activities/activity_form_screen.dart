@@ -4,6 +4,7 @@ import '../../core/utils/date_formatter.dart';
 import '../../data/models/activity.dart';
 import '../../providers/activity_provider.dart';
 import '../../providers/stage_provider.dart';
+import '../../providers/trip_provider.dart';
 
 class ActivityFormScreen extends StatefulWidget {
   final String tripId;
@@ -207,11 +208,20 @@ class _ActivityFormScreenState extends State<ActivityFormScreen> {
   }
 
   Future<void> _pickDateTime() async {
+    final trip = context.read<TripProvider>().getById(widget.tripId);
+    if(trip == null) return;
+
+    final firstDate = DateUtils.dateOnly(trip.startDate);
+    final lastDate = DateUtils.dateOnly(trip.endDate);
+    final today = DateUtils.dateOnly(DateTime.now());
+
+    final initialDate = _dateTime != null ? DateUtils.dateOnly(_dateTime!) : today.isBefore(firstDate) ? firstDate : today.isAfter(lastDate)? lastDate : today;
+
     final date = await showDatePicker(
       context: context,
-      initialDate: _dateTime ?? DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2100),
+      initialDate: initialDate,
+      firstDate: firstDate,
+      lastDate: lastDate,
     );
     if (date == null || !mounted) return;
     final time = await showTimePicker(
