@@ -31,5 +31,6 @@
 19. ✔️Aggiustato l'ordine delle tappe nel loro ordine vero piuttosto che alfabetico
     - Ho modificato stages_tab.dart
 20. Timeline deve essere sempre ordinata per data e basta
+    - Ho cambiato timeline_screen.dart
 21. ✔️Le attività possono essere filtrate per data oppure possono essere ordinate per nome, priorità o data. Il dato filtra per data è presente all'interno del pulsante con icona affianco alla searchbar
     - Ho cambiato stage_tab.dart

@@ -19,8 +19,11 @@ class TimelineScreen extends StatefulWidget {
 class _TimelineScreenState extends State<TimelineScreen> {
   @override
   Widget build(BuildContext context) {
-    final stages =
-        context.watch<StageProvider>().getByTrip(widget.tripId);
+    // final stages =
+    //     context.watch<StageProvider>().getByTrip(widget.tripId);
+    final stages = context. watch<StageProvider>().getByTrip(widget.tripId).toList()..sort(
+      (a,b) => a.date.compareTo(b.date)
+    );
     final allActivities =
         context.watch<ActivityProvider>().getByTrip(widget.tripId);
 
