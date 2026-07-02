@@ -30,4 +30,6 @@
 18. Quando non si sceglie la data dellá ttivitàq va presa la data della tappa associata (se c'è)
 19. ✔️Aggiustato l'ordine delle tappe nel loro ordine vero piuttosto che alfabetico
     - Ho modificato stages_tab.dart
-20. La timeline deve rispettare la priorità o la data? La timeline dovrebbe essere ordinata per data e per priorità. L'attività può rimanere così perché non necessariamente bisogna rispettare l'ordine cronologico delle attività La timeline dovrebbe essere ordinata per data e per priorità. L'attività può rimanere così perché non necessariamente bisogna rispettare l'ordine cronologico delle attivitàggiungere pulsanti accanto al date picker per ordinare secondo data o secondo priorità
+20. Timeline deve essere sempre ordinata per data e basta
+21. ✔️Le attività possono essere filtrate per data oppure possono essere ordinate per nome, priorità o data. Il dato filtra per data è presente all'interno del pulsante con icona affianco alla searchbar
+    - Ho cambiato stage_tab.dart
