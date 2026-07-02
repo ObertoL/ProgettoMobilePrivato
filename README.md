@@ -36,3 +36,5 @@
     - Ho cambiato timeline_screen.dart
 21. ✔️Le attività possono essere filtrate per data oppure possono essere ordinate per nome, priorità o data. Il dato filtra per data è presente all'interno del pulsante con icona affianco alla searchbar
     - Ho cambiato stage_tab.dart
+22. ✔️Le attività adesso possono cambiare tappa associata e data/ora
+    - activity_form_screen.dart, activity.dart

@@ -123,6 +123,7 @@ class Activity {
     String? id,
     String? tripId,
     String? stageId,
+    bool clearStageId = false,
     String? title,
     String? description,
     DateTime? dateTime,
@@ -135,7 +136,7 @@ class Activity {
     return Activity(
       id: id ?? this.id,
       tripId: tripId ?? this.tripId,
-      stageId: stageId ?? this.stageId,
+      stageId: clearStageId ? null : (stageId ?? this.stageId),
       title: title ?? this.title,
       description: description ?? this.description,
       dateTime: dateTime ?? this.dateTime,
