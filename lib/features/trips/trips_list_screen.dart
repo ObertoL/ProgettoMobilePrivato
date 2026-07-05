@@ -373,11 +373,11 @@ class _TripCard extends StatelessWidget {
   Color _backgroundForStatus(TripStatus status) {
     switch (status) {
       case TripStatus.future:
-        return AppColors.statusFuture.withOpacity(0.1);
+        return const Color.fromARGB(255, 0, 0, 255).withOpacity(0.2);
       case TripStatus.ongoing:
-        return AppColors.statusOngoing.withOpacity(0.1);
+        return const Color.fromARGB(255, 255, 255, 0).withOpacity(0.2);
       case TripStatus.completed:
-        return AppColors.statusCompleted.withOpacity(0.1);
+        return const Color.fromARGB(255, 0, 255, 0).withOpacity(0.2);
       case TripStatus.archived:
         return AppColors.statusArchived.withOpacity(0.1);
     }
