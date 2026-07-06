@@ -251,7 +251,7 @@ class _TripCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  StatusChip.trip(trip.status),
+                  StatusChip.trip(status),
                   // StatusChip.trip(status),
                 ],
               ),
@@ -373,7 +373,7 @@ class _TripCard extends StatelessWidget {
   Color _backgroundForStatus(TripStatus status) {
     switch (status) {
       case TripStatus.future:
-        return const Color.fromARGB(255, 0, 0, 255).withOpacity(0.2);
+      return const Color.fromARGB(255, 0, 0, 255).withOpacity(0.2);
       case TripStatus.ongoing:
         return const Color.fromARGB(255, 255, 255, 0).withOpacity(0.2);
       case TripStatus.completed:
