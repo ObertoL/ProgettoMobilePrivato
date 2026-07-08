@@ -3,7 +3,9 @@ import 'package:provider/provider.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/utils/date_formatter.dart';
 import '../../data/models/activity.dart';
+import '../../data/models/expense.dart';
 import '../../providers/activity_provider.dart';
+import '../../providers/expense_provider.dart';
 import '../../shared/widgets/empty_state.dart';
 import '../../shared/widgets/status_chip.dart';
 import '../../shared/widgets/confirm_dialog.dart';
@@ -226,8 +228,8 @@ class _ActivityCard extends StatelessWidget {
           child: Row(
             children: [
               GestureDetector(
-                onTap: () =>
-                    context.read<ActivityProvider>().toggleStatus(activity),
+                onTap: 
+                    () => _onStatusTap(context),
                 child: Icon(
                   activity.status == ActivityStatus.done
                       ? Icons.check_circle
@@ -305,16 +307,141 @@ class _ActivityCard extends StatelessWidget {
     );
   }
 
+  Future<void> _onStatusTap(BuildContext context) async{
+    final activityProvider = context.read<ActivityProvider>();
+    final expenseProvider = context.read<ExpenseProvider>();
+
+    final formKey = GlobalKey<FormState>();
+    final controller = TextEditingController(
+      text: activity.estimatedCost?.toString() ?? '',
+    );
+
+    if(activity.status == ActivityStatus.done) {
+      final expenses = expenseProvider.getByTrip(tripId);
+      final actualExpense = expenses.where((e) => e.activityId == activity.id && e.status == ExpenseStatus.actual).toList();
+      for (final exp in actualExpense){
+        await expenseProvider.deleteExpense(activity.tripId, exp.id);
+      }
+
+      await activityProvider.toggleStatus(activity);
+      return;
+    }
+
+    final amount = await showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        // title: const Text('Quanto è costata l\'attività?'),
+        // content: TextField(
+        //   controller : controller,
+        //   keyboardType: const TextInputType.numberWithOptions(decimal: true),
+        //   decoration: const InputDecoration(
+        //     labelText: 'Importo effettivo (€)',
+        //     prefixIcon: Icon(Icons.euro_outlined),
+        //     errorText: errorText,
+        //   ),
+        title: const Text('Quanto è costata l\'attività?'),
+        content: Form(
+          key: formKey,
+          child: TextFormField(
+          controller: controller,
+          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+          decoration: const InputDecoration(
+            labelText: 'Importo Effettivo (€)',
+            prefixIcon: Icon(Icons.euro_outlined),
+            errorMaxLines: 2,
+          ),
+          validator: (v) {
+            if(v == null||v.trim().isEmpty){
+              return 'Inserisci un importo';
+            }
+
+            if(v.contains('-')){
+              return 'Inserisci un importo maggiore o uguale a 0';
+            }
+
+            final sanitized = v.replaceAll(',', '.').replaceAll('-', '');
+            final parsed = double.tryParse(sanitized);
+
+            if(parsed == null){
+              return 'Inserisci un numero valido';
+            }
+
+            if(parsed < 0){
+              return 'Inserisci un importo maggiore o uguale a 0';
+            }
+            return null;
+          }
+
+        ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(null),
+            child: const Text('Annulla'),),
+          ElevatedButton(
+            onPressed: () {
+              if(!formKey.currentState!.validate()){
+                return;
+              }
+              final text = controller.text.trim();
+              final sanitized = text.replaceAll(',', '.').replaceAll('-', '');
+              final parsed = double.tryParse(sanitized);
+
+              if(text.isEmpty){
+
+              }
+              if(parsed == null || parsed< 0){
+                return;
+              }
+
+              Navigator.of(ctx).pop(parsed);
+
+            },
+            child: const Text('Salva'),
+          )
+        ],
+      ),);
+
+      if(amount== null) return;
+      await activityProvider.updateActivity(
+        activity.copyWith(status: ActivityStatus.done),
+      );
+
+      await expenseProvider.addExpense(
+        tripId: activity.tripId,
+        stageId: activity.stageId,
+        activityId: activity.id,
+        title: activity.title,
+        amount: amount,
+        category: ExpenseCategory.other,
+        date: activity.dateTime ?? DateTime.now(),
+        paymentMethod: PaymentMethod.cash,
+        status: ExpenseStatus.actual,
+        notes: null,
+      );
+  }
+
   Future<void> _delete(BuildContext context) async {
     final confirmed = await ConfirmDialog.show(
       context,
       title: 'Elimina attività',
-      message: 'Vuoi eliminare "${activity.title}"?',
+      message: 'Vuoi eliminare "${activity.title}"? Verranno eliminate anche eventuali spese previste ed effettive eventualmente collegate',
     );
-    if (confirmed && context.mounted) {
-      await context
-          .read<ActivityProvider>()
-          .deleteActivity(tripId, activity.id);
+    if(!confirmed && !context.mounted){
+      return;
     }
+
+    final activityProvider = context.read<ActivityProvider>();
+    final expenseProvider = context.read<ExpenseProvider>();
+
+    final expense = expenseProvider.getByTrip(tripId);
+    final relatedExpenses = expense.
+    where((e) => e.activityId == activity.id)
+    .toList();
+
+    for(final e in relatedExpenses){
+      await expenseProvider.deleteExpense(tripId, e.id);}
+
+    await activityProvider.deleteActivity(tripId, activity.id);
   }
 }
